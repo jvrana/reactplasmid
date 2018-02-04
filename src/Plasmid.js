@@ -109,40 +109,83 @@ Axis.propTypes = {
 };
 
 
-class Arc extends Component {
+class ArcPath extends Component {
+
     constructor(props) {
         super(props);
     }
 
-    translate(x, y) {
-        return "translate(" + x + "," + y + ")";
-    }
-
     arcGenerator(s, e) {
-        var arcGenerator = d3.arc()
+        return d3.arc()
             .innerRadius(this.props.innerRadius)
             .outerRadius(this.props.outerRadius)
-            .cornerRadius(3.0);
+            .cornerRadius(this.props.cornerRadius)
+    }
 
-        var pathData = arcGenerator({
-            startAngle: s,
-            endAngle: e,
+    arcPath() {
+        var arcGen = this.arcGenerator(this.props.start, this.props.end);
+
+        var pathData = arcGen({
+            startAngle: this.props.start,
+            endAngle: this.props.end,
         });
 
         return pathData;
     }
 
-    render() {
-        return <g>
-            <path
-                d={this.arcGenerator(this.props.start, this.props.end)}
-                fill={this.props.fill}
-                stroke-width="2"
-                stroke="black"
-                transform={this.translate(this.props.cx, this.props.cy)}
-            />
-        </g>;
+    arcCentroid() {
+        return this.arcGenerator().centroid({startAngle: this.props.start, endAngle: this.props.end});
     }
+
+    translate(x, y) {
+        return "translate(" + x + "," + y + ")"
+    }
+
+    transform() {
+        return this.translate(this.props.cx, this.props.cy);
+    }
+
+    renderChildren() {
+        return React.Children.map(this.props.children,
+            child => {
+                return React.cloneElement(child, {
+                    cx: this.props.cx,
+                    cy: this.props.cy,
+                    centroidx: this.arcCentroid()[0],
+                    centroidy: this.arcCentroid()[1],
+                    path: this.arcPath(),
+                    start: this.props.start,
+                    end: this.props.end,
+                });
+            }
+        );
+    }
+
+    render() {
+        return <g className={"arcpath"} transform={this.transform()}>
+            {this.renderChildren()}
+        </g>
+    }
+}
+
+ArcPath.propTypes = {
+    cx: PropTypes.number.isRequired,
+    cy: PropTypes.number.isRequired,
+    start: PropTypes.number.isRequired,
+    end: PropTypes.number.isRequired,
+    innerRadius: PropTypes.number.isRequired,
+    outerRadius: PropTypes.number.isRequired,
+    cornerRadius: PropTypes.number
+};
+
+function Arc(props) {
+    return <path className={"arc"} d={props.path} fill={props.fill} cornerRadius={props.cornerRadius} stroke={'black'} stroke-weight={1}/>
+}
+
+function ArcLabel(props) {
+    return <text x={this.props.centroidx} y={this.props.centroidy} textAnchor={'middle'} alignmentBaseline={'middle'}>
+        {this.props.label}
+    </text>
 }
 
 Arc.propTypes = {
@@ -152,8 +195,31 @@ Arc.propTypes = {
     cy: PropTypes.number.isRequired,
     innerRadius: PropTypes.number.isRequired,
     outerRadius: PropTypes.number.isRequired,
+    cornerRadius: PropTypes.number,
     fill: PropTypes.string.isRequired,
 };
+
+
+class FeaturePath extends Component {
+    constructor(props) {
+        super(props);
+    }
+
+    renderChildren() {
+
+    }
+
+    render() {
+        let padding = 5.0;
+        let delta = padding + this.props.boxHeight;
+        let shell = this.props.shell + this.props.shellOffset;
+        let innerRadius = this.props.radius + delta * this.props.shell;
+        let outerRadius = innerRadius + this.props.boxHeight;
+        let start = this.radialScaleAng(this.props.start);
+        let end = this.radialScaleAng(this.props.end);
+    }
+
+}
 
 
 class Feature extends Component {
@@ -165,17 +231,17 @@ class Feature extends Component {
         return x / this.props.context * 2 * Math.PI
     }
 
-    polarToCart(r, theta) {
-        let x = r * Math.sin(theta);
-        let y = r * Math.cos(theta);
-        return [x, y];
-    }
-
-    radialScale(x, y) {
-        let theta = this.radialScaleAng(x);
-        let r = this.props.radius + y;
-        return this.polarToCart(r, theta)
-    }
+    // polarToCart(r, theta) {
+    //     let x = r * Math.sin(theta);
+    //     let y = r * Math.cos(theta);
+    //     return [x, y];
+    // }
+    //
+    // radialScale(x, y) {
+    //     let theta = this.radialScaleAng(x);
+    //     let r = this.props.radius + y;
+    //     return this.polarToCart(r, theta)
+    // }
 
     render() {
         let padding = 5.0;
@@ -183,17 +249,16 @@ class Feature extends Component {
         let shell = this.props.shell + this.props.shellOffset;
         let innerRadius = this.props.radius + delta * this.props.shell;
         let outerRadius = innerRadius + this.props.boxHeight;
-        return <g id="feature">
-            <Arc
-                start={this.radialScaleAng(this.props.start)}
-                end={this.radialScaleAng(this.props.end)}
-                innerRadius={innerRadius}
-                outerRadius={outerRadius}
-                cx={this.props.width / 2.0}
-                cy={this.props.height / 2.0}
-                fill={this.props.fill
-                }/>
-        </g>
+        let start = this.radialScaleAng(this.props.start);
+        let end = this.radialScaleAng(this.props.end);
+        return <ArcPath className={"feature"} cx={this.props.cx}
+                     cy={this.props.cy}
+                     innerRadius={innerRadius}
+                     outerRadius={outerRadius}
+                     start={start}
+                     end={end}>
+                <Arc className={"featurePath"} fill={this.props.fill} cornerRadius={3}/>
+            </ArcPath>;
     }
 }
 
@@ -202,8 +267,8 @@ Feature.propTypes = {
     end: PropTypes.number.isRequired,
     boxHeight: PropTypes.number.isRequired,
     radius: PropTypes.number.isRequired,
-    width: PropTypes.number.isRequired,
-    height: PropTypes.number.isRequired,
+    cx: PropTypes.number.isRequired,
+    cy: PropTypes.number.isRequired,
     context: PropTypes.number.isRequired,
     fill: PropTypes.string.isRequired,
     shell: PropTypes.number,
@@ -267,18 +332,18 @@ class Features extends Component {
                 if (this.props.inner) {
                     shell *= -1.0;
                 }
-                return <g
-                    onMouseEnter={() => {
-                        return this.enterFeature(i)
-                    }}
-                    onMouseLeave={() => {
-                        return this.exitFeature(i)
-                    }}>
-                    <Feature key={i} height={this.props.height} start={f.start} end={f.end}
-                             width={this.props.width} radius={this.props.radius}
+                return <g className={"feature"} onMouseEnter={() => {
+                    return this.enterFeature(i)
+                }}
+                          onMouseLeave={() => {
+                              return this.exitFeature(i)
+                          }}>
+                    <Feature key={i} start={f.start} end={f.end}
+                             cx={this.props.cx} cy={this.props.cy}
+                             radius={this.props.radius}
                              boxHeight={this.props.boxHeight} context={this.props.context}
-                             fill={f.fill} shell={shell}/>
-                </g>;
+                             fill={f.fill} shell={shell} cornerRadius={this.props.cornerRadius}
+                    /></g>;
             }
         );
 
@@ -287,13 +352,14 @@ class Features extends Component {
 }
 
 Feature.propTypes = {
-    height: PropTypes.number.isRequired,
-    width: PropTypes.number.isRequired,
+    cy: PropTypes.number.isRequired,
+    cx: PropTypes.number.isRequired,
     radius: PropTypes.number.isRequired,
     boxHeight: PropTypes.number.isRequired,
     context: PropTypes.number.isRequired,
     shellOffset: PropTypes.number,
-}
+    cornerRadius: PropTypes.number,
+};
 
 
 const PositionLabel = (props) => {
@@ -328,6 +394,33 @@ const PositionLabel = (props) => {
     );
 };
 
+// class Highlight (basically a Feature
+
+function Base(props) {
+    let cx = 500;
+    let cy = 500;
+    let size = props.size;
+    return <g className={'base'}>
+        <rect width={size} height={size} x={cx} y={cy} fill={"none"} stroke={'black'} stroke-weight={1}/>
+        <text x={cx + size / 2.0} y={cy + size / 2.0} alignmentBaseline={'middle'} textAnchor={'middle'}>
+            T
+        </text>
+    </g>
+}
+
+class BaseViewer extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            bases: "ACGTAGTCGTATCGTAGCTGCATGTCGATGCTGTGATGTGATGTG"
+        }
+    }
+
+    render() {
+        return <Base x={0} y={0} size={20} base={"A"}/>
+    }
+}
+
 class Plasmid extends Component {
     constructor(props) {
         super(props);
@@ -355,47 +448,53 @@ class Plasmid extends Component {
         let cx = this.props.width / 2.0;
         let cy = this.props.height / 2.0;
 
-        return <svg onMouseMove={this._onMouseMove.bind(this)} width={this.props.width} height={this.props.height}>
-            <defs>
-                <Arrow/>
-            </defs>
-            <line x1="0" y1="0" x2="200" y2="50" stroke="red" stroke-width="2" marker-end="url(#arrow)"/>
+        return <div>
+            <div>
+                <svg onMouseMove={this._onMouseMove.bind(this)} width={this.props.width} height={this.props.height}>
+                    {/*<defs>*/}
+                    {/*<Arrow/>*/}
+                    {/*</defs>*/}
+                    {/*<line x1="0" y1="0" x2="200" y2="50" stroke="red" stroke-width="2" marker-end="url(#arrow)"/>*/}
 
-            <Spine height={this.props.height} width={this.props.width} radius={this.props.radius}
-                   spineWidth={this.props.spineWidth}/>
-            <Axis cx={cx}
-                  cy={cy}
-                  radius={this.props.radius}
-                  minorTicks={100}
-                  majorTicks={25}
-                  minorTickHeight={10}
-                  majorTickHeight={18}
-                  innerTicks={true}
-                  context={this.props.context}
-            />
-            <ReactCursorPosition className={"example"}>
-                <PositionLabel/>
-            </ReactCursorPosition>
-            <Features width={this.props.width}
-                      height={this.props.height}
-                      context={this.props.context}
-                      boxHeight={this.props.boxHeight}
-                      radius={this.props.radius}
-                      data={this.state.featureData}
-                      shellOffset={0}
-                      inner={false}
-            />
-            <text x={cx}
-                  y={cy}
-                  font-size="25"
-                  font-family="Verdana"
-                  text-anchor="middle"
-                  alignment-baseline="middle">
-                pGRR-W8-RGR-W36
-            </text>
+                    <Spine height={this.props.height} width={this.props.width} radius={this.props.radius}
+                           spineWidth={this.props.spineWidth}/>
+                    <Axis cx={cx}
+                          cy={cy}
+                          radius={this.props.radius}
+                          minorTicks={100}
+                          majorTicks={25}
+                          minorTickHeight={10}
+                          majorTickHeight={18}
+                          innerTicks={true}
+                          context={this.props.context}
+                    />
+                    <ReactCursorPosition className={"example"}>
+                        <PositionLabel/>
+                    </ReactCursorPosition>
+                    <Features cx={cx}
+                              cy={cy}
+                              context={this.props.context}
+                              boxHeight={this.props.boxHeight}
+                              radius={this.props.radius}
+                              data={this.state.featureData}
+                              shellOffset={0}
+                              inner={false}
+                              cornerRadius={10.0}
+                    />
+                    <text x={cx}
+                          y={cy}
+                          font-size="25"
+                          font-family="Verdana"
+                          text-anchor="middle"
+                          alignment-baseline="middle">
+                        pGRR-W8-RGR-W36
+                    </text>
+                    ;
+                    {/*<BaseViewer/>*/}
+                </svg>
+            </div>
             ;
-        </svg>
-            ;
+        </div>;
     }
 }
 
