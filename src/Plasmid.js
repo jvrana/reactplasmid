@@ -206,7 +206,22 @@ class FeaturePath extends Component {
     }
 
     renderChildren() {
+        let padding = 5.0;
+        let delta = padding + this.props.boxHeight;
 
+        return React.Children.map(this.props.children,
+            child => {
+                return React.cloneElement(child, {
+                    cx: this.props.cx,
+                    cy: this.props.cy,
+                    centroidx: this.arcCentroid()[0],
+                    centroidy: this.arcCentroid()[1],
+                    path: this.arcPath(),
+                    start: this.props.start,
+                    end: this.props.end,
+                });
+            }
+        );
     }
 
     render() {
@@ -497,6 +512,5 @@ class Plasmid extends Component {
         </div>;
     }
 }
-
 
 export default Plasmid

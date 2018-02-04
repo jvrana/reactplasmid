@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-import Plasmid from './Plasmid';
+import Plasmid from './Plasmid2';
 
 class App extends Component {
   render() {
@@ -10,7 +10,7 @@ class App extends Component {
           <h2>React Plasmid</h2>
         </header>
         <div>
-            <Plasmid radius={200} width={1000} height={1000} spineWidth={10} boxHeight={15.0} context={9584}/>
+            <Plasmid radius={200} width={1000} height={1000} spineWidth={5.0} context={9584}/>
         </div>
       </div>
     );
