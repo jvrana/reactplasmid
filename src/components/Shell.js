@@ -8,11 +8,11 @@ function Shell(props) {
     return React.Children.map(props.children,
         child => {
             return React.cloneElement(child, {
-                cx: props.cx,
-                cy: props.cy,
                 context: props.context,
                 innerRadius: innerRadius,
-                outerRadius: outerRadius
+                outerRadius: outerRadius,
+                radius: props.radius,
+                context: props.context,
             });
         }
     );
@@ -28,8 +28,6 @@ class Shells extends Component {
             child => {
                 if (child.type === Shell) {
                     return React.cloneElement(child, {
-                        cx: this.props.cx,
-                        cy: this.props.cy,
                         context: this.props.context,
                         shellPadding: this.props.shellPadding,
                         shellHeight: this.props.shellHeight,

@@ -1,13 +1,15 @@
 import PropTypes from "prop-types";
 import {Component} from "react";
 import { ArcPath, Arc } from "./Arc.js"
+import { Tick, PositionLabel } from "./Axis.js"
+
 var React = require('react');
 
 function FeaturePath(props) {
     let start = 2.0 * Math.PI * props.start / props.context;
     let end = 2.0 * Math.PI * props.end / props.context;
     return <ArcPath start={start} end={end} innerRadius={props.innerRadius} outerRadius={props.outerRadius}
-                    cornerRadius={props.cornerRadius}>{props.children}</ArcPath>
+                    cornerRadius={props.cornerRadius} radius={props.radius} context={props.context}>{props.children}</ArcPath>
 }
 
 class Feature extends Component {

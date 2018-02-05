@@ -9,47 +9,29 @@ import { Transform } from '../components/Utils.js';
 let randomColor = require('randomcolor');
 
 
-function SVGGroup(props) {
-    let children = React.Children.map(props.children,
-        child => {
-            return React.cloneElement(child, {...props})
-        });
-    return children
-}
-
-
-class PlasmidPath extends Component {
-    constructor(props) {
-        super(props);
-    }
-
-    renderChildren() {
-        return React.Children.map(this.props.children, child => {
-            if (child.type.prototype instanceof Component) {
-                return React.cloneElement(child, {
-                    cx: this.props.width / 2.0,
-                    cy: this.props.height / 2.0,
-                    context: this.props.context,
-                    radius: this.props.radius,
+function PlasmidPath(props) {
+    let x = props.width/2.0, y = props.height/2.0;
+    let children = React.Children.map(props.children, child => {
+            return React.cloneElement(child, {
+                    context: props.context,
+                    radius: props.radius,
                 })
-            }
         });
-    }
 
-    render() {
-        return <svg width={this.props.width} height={this.props.height}>
-            <circle
-                className="spine"
-                cx={this.props.width / 2.0}
-                cy={this.props.height / 2.0}
-                r={this.props.radius}
-                stroke='black'
-                fill='none'
-                strokeWidth={this.props.spineWidth}
-            />
-            {this.renderChildren()}</svg>;
-    }
-};
+    return <svg width={props.width} height={props.height}>
+            <g transform={"translate(" + x + "," + y + ")"}>
+                <circle
+                    className="spine"
+                    cx={0}
+                    cy={0}
+                    r={props.radius}
+                    stroke='black'
+                    fill='none'
+                    strokeWidth={props.spineWidth}
+                />
+                {children}
+            </g></svg>;
+}
 
 
 function Highlight(props) {
@@ -75,7 +57,6 @@ class Plasmid extends Component {
                             context={this.props.context} radius={this.props.radius}
                             spineWidth={this.props.spineWidth} width={this.props.width}
                             height={this.props.height}>
-            <Transform>
                 <Shells key={"shells1"} shellPadding={5} shellHeight={15} shellOffset={10}>
                     <Shell shell={0}>
                         <FeaturePath start={6000} end={8000} cornerRadius={3.0}>
@@ -97,7 +78,6 @@ class Plasmid extends Component {
                 <AxisLabels ticks={10} context={this.props.context} r={this.props.radius - 24.0} size={12} font={"sans-serif"}/>
                 <text textAnchor={'middle'} fontSize={20} fontFamily={"Verdana"}>pMOD-LTR2-Bleo-pGRR_ij-RGR_k</text>
                 <text y={20} textAnchor={'middle'} fontSize={15} fontFamily={"Verdana"}>{this.props.context + "bp"}</text>
-            </Transform>
         </PlasmidPath>;
     }
 }

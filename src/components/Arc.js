@@ -35,13 +35,16 @@ class ArcPath extends React.Component {
         return React.Children.map(this.props.children,
             child => {
                 return React.cloneElement(child, {
-                    cx: this.props.cx,
-                    cy: this.props.cy,
                     centroidx: this.arcCentroid()[0],
                     centroidy: this.arcCentroid()[1],
                     path: this.arcPath(),
                     start: this.props.start,
                     end: this.props.end,
+                    radius: this.props.radius,
+                    innerRadius: this.props.innerRadius,
+                    outerRadius: this.props.outerRadius,
+                    radius: this.props.radius,
+                    context: this.props.context
                 });
             }
         );
