@@ -38,12 +38,9 @@ class ArcPath extends React.Component {
                     centroidx: this.arcCentroid()[0],
                     centroidy: this.arcCentroid()[1],
                     path: this.arcPath(),
-                    start: this.props.start,
-                    end: this.props.end,
                     radius: this.props.radius,
                     innerRadius: this.props.innerRadius,
                     outerRadius: this.props.outerRadius,
-                    radius: this.props.radius,
                     context: this.props.context
                 });
             }

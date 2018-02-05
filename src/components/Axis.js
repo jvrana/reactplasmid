@@ -12,7 +12,7 @@ function Tick(props) {
 
     return <line x1={x1} y1={y1} x2={x2} y2={y2}
               stroke={props.stroke}
-              strokeWidth={props.weight}/>;
+              strokeWidth={props.weight} opacity={props.opacity}/>;
 }
 
 
@@ -40,11 +40,28 @@ function PositionLabel(props) {
         t += "rotate(" + props.rotate + " " + props.r + " " + 0 + ")";
     }
 
+    let textAnchor = 'end';
+    let theta = 360 * props.pos / props.context - 90.0;
+    let rot = 0.0;
+
+    // if (!props.rotate) {
+    //     rot = -theta;
+    // }
+    if (theta > 180) {
+        textAnchor = 'start';
+        rot = 180;
+    }
+
+    let transform = "rotate(" + theta + ")";
+    if (rot != 0.0) {
+        transform += "rotate(" + rot + " " + props.r + " " + 0 + ")";
+    }
+
     return <text
         x={props.r}
         y={0}
-        transform={t}
-        textAnchor={props.textAnchor}
+        transform={transform}
+        textAnchor={textAnchor}
         alignmentBaseline={'middle'}
         fontSize={props.size}
         fontFamily={props.font}>
@@ -86,6 +103,10 @@ AxisLabels.propTyptes = {
 Tick.propTypes = {
     innerRadius: PropTypes.number.isRequired,
     outerRadius: PropTypes.number.isRequired,
+    theta: PropTypes.number.isRequired,
+    weight: PropTypes.number.isRequired,
+    stroke: PropTypes.string,
+    opacity: PropTypes.number,
 };
 
 
@@ -95,4 +116,4 @@ Axis.propTypes = {
     ticks: PropTypes.number.isRequired,
 };
 
-export {Axis, AxisLabels, PositionLabel};
+export {Tick, Axis, AxisLabels, PositionLabel};

@@ -1,66 +1,68 @@
 import PropTypes from "prop-types";
 import {Component} from "react";
-import { ArcPath, Arc } from "./Arc.js"
-import { Tick, PositionLabel } from "./Axis.js"
+import {ArcPath, Arc} from "./Arc.js"
+import {Tick, PositionLabel} from "./Axis.js"
 
 var React = require('react');
 
-function FeaturePath(props) {
-    let start = 2.0 * Math.PI * props.start / props.context;
-    let end = 2.0 * Math.PI * props.end / props.context;
-    return <ArcPath start={start} end={end} innerRadius={props.innerRadius} outerRadius={props.outerRadius}
-                    cornerRadius={props.cornerRadius} radius={props.radius} context={props.context}>{props.children}</ArcPath>
-}
 
 class Feature extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            opacity: 1.0
+            opacity: 1.0,
+            tickOpacity: 0.0
         }
     }
 
     onMouseEnter() {
-        this.setState({opacity: 0.5});
+        this.setState({
+            opacity: 0.5,
+            tickOpacity: 1.0,
+        });
     }
 
     onMouseExit() {
-        this.setState({opacity: 1.0});
+        this.setState({
+            opacity: 1.0,
+            tickOpacity: 0.0,
+        });
     }
 
     render() {
-        return <g className={"feature"} onMouseEnter={() => {
-            this.onMouseEnter()
-        }} onMouseLeave={() => {
-            this.onMouseExit()
-        }}>
-            <Arc path={this.props.path} fill={this.props.fill} opacity={this.state.opacity}
-                 cornerRadius={this.props.cornerRadius} start={this.props.start} end={this.props.end}
-                 innerRadius={this.props.innerRadius} outerRadius={this.props.outerRadius}/>
+        let radStart = 2.0 * Math.PI * this.props.start / this.props.context;
+        let radEnd = 2.0 * Math.PI * this.props.end / this.props.context;
+        return <g className={"feature"}
+                  onMouseEnter={() => {this.onMouseEnter()}}
+                  onMouseLeave={() => {this.onMouseExit()}}>
+            <ArcPath start={radStart} end={radEnd} innerRadius={this.props.innerRadius} outerRadius={this.props.outerRadius}
+                     cornerRadius={this.props.cornerRadius} radius={this.props.radius}
+                     context={this.props.context}>
+                <Arc path={this.props.path} fill={this.props.fill} opacity={this.state.opacity}/>
+            </ArcPath>
+                <Tick theta={radStart} innerRadius={this.props.radius - 20} outerRadius={this.props.innerRadius}
+                      stroke={'red'} opacity={this.state.tickOpacity} weight={1.0}/>
+                <Tick theta={radEnd} innerRadius={this.props.radius - 20} outerRadius={this.props.innerRadius}
+                      stroke={'red'} opacity={this.state.tickOpacity} weight={1.0}/>
+                <PositionLabel context={this.props.context} label={this.props.start} pos={this.props.start}
+                               r={this.props.radius - 100.0}/>
+                <PositionLabel context={this.props.context} label={this.props.end} pos={this.props.end}
+                               r={this.props.radius - 100.0}/>
         </g>;
     }
 
 }
 
-FeaturePath.propTypes = {
+Feature.propTypes = {
+    path: PropTypes.string,
+    fill: PropTypes.string.isRequired,
+    opacity: PropTypes.number,
     start: PropTypes.number.isRequired,
     end: PropTypes.number.isRequired,
     innerRadius: PropTypes.number,
     outerRadius: PropTypes.number,
     cornerRadius: PropTypes.number,
-    context: PropTypes.number,
-};
-
-Feature.propTypes = {
-    path: PropTypes.string,
-    fill: PropTypes.string.isRequired,
-    opacity: PropTypes.number,
-    start: PropTypes.number,
-    end: PropTypes.number,
-    innerRadius: PropTypes.number,
-    outerRadius: PropTypes.number,
-    cornerRadius: PropTypes.number,
 };
 
 
-export { FeaturePath, Feature };
+export { Feature};

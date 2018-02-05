@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import '../App.css';
 import PropTypes from 'prop-types';
 import { Shell, Shells } from '../components/Shell.js';
-import { FeaturePath, Feature } from '../components/Feature.js';
+import { Feature } from '../components/Feature.js';
 import { AxisLabels, Axis } from '../components/Axis.js';
 import { Transform } from '../components/Utils.js';
 
@@ -34,15 +34,15 @@ function PlasmidPath(props) {
 }
 
 
-function Highlight(props) {
-    return <Shells shellPadding={0} shellHeight={props.radius} shellOffset={0}>
-        <Shell shell={0}>
-            <FeaturePath start={props.start} end={props.end} cornerRadius={3.0}>
-                <Feature fill={randomColor({luminosity: 'light'})} opacity={0.1}/>
-            </FeaturePath>
-        </Shell>
-    </Shells>
-}
+// function Highlight(props) {
+//     return <Shells shellPadding={0} shellHeight={props.radius} shellOffset={0}>
+//         <Shell shell={0}>
+//             <FeaturePath start={props.start} end={props.end} cornerRadius={3.0}>
+//                 <Feature fill={randomColor({luminosity: 'light'})} opacity={0.1}/>
+//             </FeaturePath>
+//         </Shell>
+//     </Shells>
+// }
 
 
 class Plasmid extends Component {
@@ -59,20 +59,14 @@ class Plasmid extends Component {
                             height={this.props.height}>
                 <Shells key={"shells1"} shellPadding={5} shellHeight={15} shellOffset={10}>
                     <Shell shell={0}>
-                        <FeaturePath start={6000} end={8000} cornerRadius={3.0}>
-                            <Feature fill={randomColor({luminosity: 'light'})}/>
-                        </FeaturePath>
-                        <FeaturePath start={2000} end={5000} cornerRadius={3.0}>
-                            <Feature fill={randomColor({luminosity: 'light'})}/>
-                        </FeaturePath>
+                        <Feature start={3000} end={5000} cornerRadius={3.0} fill={randomColor({luminosity: 'light'})}/>
+                        <Feature start={6000} end={8000} cornerRadius={3.0} fill={randomColor({luminosity: 'light'})}/>
                     </Shell>
                     <Shell shell={1}>
-                        <FeaturePath start={0} end={4000} cornerRadius={3.0}>
-                            <Feature fill={randomColor({luminosity: 'light'})}/>
-                        </FeaturePath>
+                        <Feature start={0} end={4000} cornerRadius={3.0} fill={randomColor({luminosity: 'light'})}/>
                     </Shell>
                 </Shells>
-                <Highlight start={0} end={100} radius={this.props.radius} />
+                {/*<Highlight start={0} end={100} radius={this.props.radius} />*/}
                 <Axis r={this.props.radius} ticks={100} tickHeight={-10} stroke={'black'} weight={2.0}/>
                 <Axis r={this.props.radius} ticks={10} tickHeight={-20} stroke={'black'} weight={2.0}/>
                 <AxisLabels ticks={10} context={this.props.context} r={this.props.radius - 24.0} size={12} font={"sans-serif"}/>
