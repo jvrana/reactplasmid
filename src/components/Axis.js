@@ -33,8 +33,7 @@ function Axis(props) {
 }
 
 function PositionLabel(props) {
-    let pos = props.pos;
-    let deg = 360.0 * pos / props.context - 90.0;  // position starts at 12 O'Clock
+    let deg = 360.0 * props.pos / props.context - 90.0;  // position starts at 12 O'Clock
     let t = "rotate(" + deg + ")";
     if (props.rotate) {
         t += "rotate(" + props.rotate + " " + props.r + " " + 0 + ")";
@@ -47,7 +46,7 @@ function PositionLabel(props) {
     // if (!props.rotate) {
     //     rot = -theta;
     // }
-    if (theta > 180) {
+    if (props.pos > props.context/2.0) {
         textAnchor = 'start';
         rot = 180;
     }
@@ -63,8 +62,9 @@ function PositionLabel(props) {
         transform={transform}
         textAnchor={textAnchor}
         alignmentBaseline={'middle'}
-        fontSize={props.size}
-        fontFamily={props.font}>
+        fontSize={props.fontSize}
+        fontFamily={props.fontFamily}
+    opacity={props.opacity}>
         {props.label}
     </text>;
 }
@@ -74,13 +74,7 @@ function AxisLabels(props) {
     for (let i = 0; i < props.ticks; i += 1) {
         let pos = i / props.ticks * props.context;
         let label = Math.round(pos);
-        let rotate = 0;
-        let textAnchor = 'end';
-        if (i > props.ticks / 2.0) {
-            rotate = 180;
-            textAnchor = 'start';
-        }
-        labels.push(<PositionLabel key={i} size={props.size} font={props.font} pos={pos} textAnchor={textAnchor} rotate={rotate}
+        labels.push(<PositionLabel key={i} fontSize={props.fontSize} fontFamily={props.fontSize} pos={pos}
                                    label={"" + label} r={props.r} context={props.context}/>)
     }
     return labels;
@@ -91,6 +85,7 @@ PositionLabel.propTypes = {
     label: PropTypes.string.isRequired,
     pos: PropTypes.number.isRequired,
     r: PropTypes.number.isRequired,
+    opacity: PropTypes.number,
 };
 
 AxisLabels.propTyptes = {

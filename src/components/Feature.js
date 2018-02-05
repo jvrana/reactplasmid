@@ -32,6 +32,7 @@ class Feature extends Component {
     render() {
         let radStart = 2.0 * Math.PI * this.props.start / this.props.context;
         let radEnd = 2.0 * Math.PI * this.props.end / this.props.context;
+        let labelPos = this.props.radius - 100.0;
         return <g className={"feature"}
                   onMouseEnter={() => {this.onMouseEnter()}}
                   onMouseLeave={() => {this.onMouseExit()}}>
@@ -40,14 +41,14 @@ class Feature extends Component {
                      context={this.props.context}>
                 <Arc path={this.props.path} fill={this.props.fill} opacity={this.state.opacity}/>
             </ArcPath>
-                <Tick theta={radStart} innerRadius={this.props.radius - 20} outerRadius={this.props.innerRadius}
+                <Tick theta={radStart} innerRadius={labelPos} outerRadius={this.props.innerRadius}
                       stroke={'red'} opacity={this.state.tickOpacity} weight={1.0}/>
-                <Tick theta={radEnd} innerRadius={this.props.radius - 20} outerRadius={this.props.innerRadius}
+                <Tick theta={radEnd} innerRadius={labelPos} outerRadius={this.props.innerRadius}
                       stroke={'red'} opacity={this.state.tickOpacity} weight={1.0}/>
                 <PositionLabel context={this.props.context} label={this.props.start} pos={this.props.start}
-                               r={this.props.radius - 100.0}/>
+                               r={labelPos} fontSize={12} fontFamily={"Verdana"} opacity={this.state.tickOpacity}/>
                 <PositionLabel context={this.props.context} label={this.props.end} pos={this.props.end}
-                               r={this.props.radius - 100.0}/>
+                               r={labelPos} fontSize={12} fontFamily={"Verdana"} opacity={this.state.tickOpacity}/>
         </g>;
     }
 

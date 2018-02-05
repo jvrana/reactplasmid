@@ -69,9 +69,9 @@ class Plasmid extends Component {
                 {/*<Highlight start={0} end={100} radius={this.props.radius} />*/}
                 <Axis r={this.props.radius} ticks={100} tickHeight={-10} stroke={'black'} weight={2.0}/>
                 <Axis r={this.props.radius} ticks={10} tickHeight={-20} stroke={'black'} weight={2.0}/>
-                <AxisLabels ticks={10} context={this.props.context} r={this.props.radius - 24.0} size={12} font={"sans-serif"}/>
+                <AxisLabels ticks={10} context={this.props.context} r={this.props.radius - 25.0} fontSize={12} fontFamily={"sans-serif"}/>
                 <text textAnchor={'middle'} fontSize={20} fontFamily={"Verdana"}>pMOD-LTR2-Bleo-pGRR_ij-RGR_k</text>
-                <text y={20} textAnchor={'middle'} fontSize={15} fontFamily={"Verdana"}>{this.props.context + "bp"}</text>
+                <text y={20} textAnchor={'middle'} fontSize={20} fontFamily={"Verdana"}>{this.props.context + "bp"}</text>
         </PlasmidPath>;
     }
 }
