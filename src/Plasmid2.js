@@ -3,7 +3,7 @@ import './App.css';
 import * as d3 from 'd3';
 import PropTypes from 'prop-types';
 import ReactCursorPosition from 'react-cursor-position';
-
+import range from 'lodash/range'
 
 class PlasmidPath extends Component {
     constructor(props) {
@@ -110,7 +110,7 @@ ArcPath.propTypes = {
 
 function Arc(props) {
     return <path className={"arc"} d={props.path} fill={props.fill} cornerRadius={props.cornerRadius} stroke={'black'}
-                 stroke-weight={30}/>
+                 stroke-weight={30} opacity={props.opacity}/>
 }
 
 
@@ -119,6 +119,32 @@ function FeaturePath(props) {
     let end = 2.0 * Math.PI * props.end / props.context;
     return <ArcPath start={start} end={end} innerRadius={props.innerRadius} outerRadius={props.outerRadius}
                     cornerRadius={props.cornerRadius}>{props.children}</ArcPath>
+}
+
+class Feature extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            opacity: 1.0
+        }
+    }
+
+    onMouseEnter() {
+        console.log("Enter");
+        this.setState({opacity: 0.5});
+    }
+
+    onMouseExit() {
+        this.setState({opacity: 1.0});
+    }
+
+    render() {
+        return <g className={"feature"} onMouseEnter={ () => {this.onMouseEnter()}} onMouseLeave={() => {this.onMouseExit()}}>
+            <Arc path={this.props.path} fill={this.props.fill} opacity={this.state.opacity} cornerRadius={this.props.cornerRadius} start={this.props.start} end={this.props.end}
+                 innerRadius={this.props.innerRadius} outerRadius={this.props.outerRadius}/>
+        </g>;
+    }
+
 }
 
 
@@ -179,23 +205,62 @@ class Shells extends Component {
 }
 
 
+function SVGGroup(props) {
+    let children = React.Children.map(props.children,
+        child => {
+            return React.cloneElement(child, {...props})
+        });
+    return children
+}
+
+
+function Tick(props) {
+    let x1 = props.innerRadius * Math.sin(props.theta);
+    let y1 = props.innerRadius * Math.cos(props.theta);
+    let x2 = props.outerRadius * Math.sin(props.theta);
+    let y2 = props.outerRadius * Math.cos(props.theta);
+
+    let label = <text x={x1} y={y1} textAncor={'middle'} alignmentBaseline={'middle'}>{props.label}</text>
+
+    return <g className={"tick"}>
+            <line x1={x1} y1={y1} x2={x2} y2={y2}
+                 stroke={"black"}
+                 stroke-weight={0.25}/>
+        {label}</g>;
+}
+
+
 function Axis(props) {
 
     let ticks = [];
-    let majorTicks = [];
     for (let i = 0; i < props.ticks; i += 1) {
-        let start = Math.PI * 2.0 / props.ticks * i;
-        let end = start * 1.000001;
-        let tick = <ArcPath className={"tick"} start={start} end={end}>
-            <Arc fill={"white"}
-                 stroke={"black"}
-                 stroke-weight={0.25}/>
-        </ArcPath>;
+        let theta = Math.PI * 2.0 / props.ticks * i;
+        let tick = <Tick theta={theta} />;
         ticks.push(tick);
     }
 
     return <Shells cx={props.cx} cy={props.cy} radius={props.radius} className={"axes"} shellPadding={0}
-                   shellHeight={props.tickHeight} shellOffset={props.tickOffset}>
+                   shellHeight={props.tickHeight} shellOffset={props.tickOffset} context={props.context}>
+        <Shell className={"axis"} shell={props.shell}>
+            {ticks}
+        </Shell>
+    </Shells>
+}
+
+function AxisLabels(props) {
+
+    let ticks = [];
+    for (let l = 0; l < props.labels.length; l += 1) {
+        let label = Math.round(props.labels[l]);
+        let theta = label * 2.0 * Math.PI / props.context;
+        console.log(theta);
+        console.log(label);
+        let tick = <Tick theta={0.25} label={label} />;
+        ticks.push(tick);
+    }
+
+    return <Shells cx={props.cx} cy={props.cy} radius={props.radius} className={"axes"} shellPadding={0}
+                   shellHeight={props.tickHeight} shellOffset={props.tickOffset} context={props.context}>
         <Shell className={"axis"} shell={props.shell}>
             {ticks}
         </Shell>
@@ -236,21 +301,24 @@ class Plasmid extends Component {
                             height={this.props.height}>
             <Shells shellPadding={3} shellHeight={10} shellOffset={10}>
                 <Shell shell={0}>
-                    <ArcPath start={0} end={0.5}>
-                        <Arc fill={'none'} cornerRadius={3.0}/>
-                    </ArcPath>
+                    <FeaturePath start={6000} end={8000}>
+                        <Feature fill={'yellow'} cornerRadius={3.0}/>
+                    </FeaturePath>
                     <FeaturePath start={2000} end={5000}>
-                        <Arc fill={'none'} cornerRadius={3.0}/>
+                        <Feature fill={'purple'} cornerRadius={3.0}/>
                     </FeaturePath>
                 </Shell>
                 <Shell shell={1}>
                     <FeaturePath start={2500} end={4000}>
-                        <Arc fill={'none'} cornerRadius={3.0}/>
+                        <Feature fill={'blue'} cornerRadius={3.0}/>
                     </FeaturePath>
                 </Shell>
             </Shells>
-            <Axis ticks={200} tickHeight={10} tickOffset={0} shell={-1}/>
-            <Axis ticks={10} tickHeight={20} tickOffset={0} shell={-2}/>
+            <SVGGroup shell={-2} tickOffset={0}>
+                <Axis className="minor" ticks={200} tickHeight={10} />
+                <Axis className="major" ticks={10} tickHeight={20}/>
+                <AxisLabels labels={range(0, this.props.context, this.props.context / 10)}/>
+            </SVGGroup>
         </PlasmidPath>;
     }
 }
