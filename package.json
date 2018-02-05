@@ -6,6 +6,7 @@
     "d3": "4.13.0",
     "lodash": "^4.17.5",
     "prop-types": "^15.6.0",
+    "randomcolor": "^0.5.3",
     "react": "^16.2.0",
     "react-cursor-position": "^2.4.0",
     "react-dom": "^16.2.0",

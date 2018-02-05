@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-import Plasmid from './Plasmid2';
+import Plasmid from './components/Plasmid';
 
 class App extends Component {
   render() {
