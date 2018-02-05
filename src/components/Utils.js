@@ -8,7 +8,9 @@ class Transform extends Component {
 
     renderChildren() {
         return React.Children.map(this.props.children, child => {
-            return React.cloneElement(child, {...this.props})
+            let passedProps = Object.assign({}, this.props);
+            delete passedProps.children;
+            return React.cloneElement(child, {...passedProps})
         });
     }
 
@@ -19,12 +21,4 @@ class Transform extends Component {
     }
 }
 
-function SVGGroup(props) {
-    let children = React.Children.map(props.children,
-        child => {
-            return React.cloneElement(child, {...props})
-        });
-    return children
-}
-
-export { Transform, SVGGroup}
+export { Transform }

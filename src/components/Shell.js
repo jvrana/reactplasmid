@@ -21,22 +21,22 @@ function Shell(props) {
 class Shells extends Component {
     constructor(props) {
         super(props);
-        console.log(props.children)
     }
 
     renderChildren() {
-        console.log("rendering children for shell " + this.props.key);
         return React.Children.map(this.props.children,
             child => {
-                return React.cloneElement(child, {
-                    cx: this.props.cx,
-                    cy: this.props.cy,
-                    context: this.props.context,
-                    shellPadding: this.props.shellPadding,
-                    shellHeight: this.props.shellHeight,
-                    shellOffset: this.props.shellOffset,
-                    radius: this.props.radius,
-                });
+                if (child.type === Shell) {
+                    return React.cloneElement(child, {
+                        cx: this.props.cx,
+                        cy: this.props.cy,
+                        context: this.props.context,
+                        shellPadding: this.props.shellPadding,
+                        shellHeight: this.props.shellHeight,
+                        shellOffset: this.props.shellOffset,
+                        radius: this.props.radius,
+                    });
+                }
             }
         );
     }
