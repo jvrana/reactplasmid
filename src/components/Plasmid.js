@@ -75,7 +75,7 @@ class Plasmid extends Component {
                             height={this.props.height}>
             <Transform>
                 <Shells key={"shells1"} shellPadding={5} shellHeight={15} shellOffset={10}>
-                    <Shell shell={0}>
+                    <Shell key={"10"} shell={0}>
                         <FeaturePath start={6000} end={8000} cornerRadius={3.0}>
                             <Feature fill={randomColor({luminosity: 'light'})}/>
                         </FeaturePath>
@@ -83,7 +83,7 @@ class Plasmid extends Component {
                             <Feature fill={randomColor({luminosity: 'light'})}/>
                         </FeaturePath>
                     </Shell>
-                    <Shell shell={1}>
+                    <Shell key={"20"} shell={1}>
                         <FeaturePath start={0} end={4000} cornerRadius={3.0}>
                             <Feature fill={randomColor({luminosity: 'light'})}/>
                         </FeaturePath>
@@ -91,10 +91,10 @@ class Plasmid extends Component {
                 </Shells>
                 {/*<Highlight start={0} end={100} radius={this.props.radius} />*/}
                 <Axis r={this.props.radius} ticks={100} tickHeight={-10} stroke={'black'} weight={2.0}/>
-                <Axis r={this.props.radius} ticks={10} tickHeight={-20} stroke={'black'} weight={2.0}/>
-                <AxisLabels ticks={10} context={this.props.context} r={this.props.radius - 24.0} size={12} font={"sans-serif"}/>
-                <text textAnchor={'middle'} fontSize={20} fontFamily={"Verdana"}>pMOD-LTR2-Bleo-pGRR_ij-RGR_k</text>
-                <text y={20} textAnchor={'middle'} fontSize={15} fontFamily={"Verdana"}>{this.props.context + "bp"}</text>
+                {/*<Axis r={this.props.radius} ticks={10} tickHeight={-20} stroke={'black'} weight={2.0}/>*/}
+                {/*<AxisLabels ticks={10} context={this.props.context} r={this.props.radius - 24.0} size={12} font={"sans-serif"}/>*/}
+                {/*<text textAnchor={'middle'} fontSize={20} fontFamily={"Verdana"}>pMOD-LTR2-Bleo-pGRR_ij-RGR_k</text>*/}
+                {/*<text y={20} textAnchor={'middle'} fontSize={15} fontFamily={"Verdana"}>{this.props.context + "bp"}</text>*/}
             </Transform>
         </PlasmidPath>;
     }

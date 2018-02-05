@@ -25,6 +25,7 @@ class Shells extends Component {
     }
 
     renderChildren() {
+        console.log("rendering children for shell " + this.props.key);
         return React.Children.map(this.props.children,
             child => {
                 return React.cloneElement(child, {
