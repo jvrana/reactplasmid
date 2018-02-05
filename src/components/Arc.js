@@ -55,7 +55,7 @@ class ArcPath extends React.Component {
 }
 
 function Arc(props) {
-    return <path className={"arc"} d={props.path} fill={props.fill} cornerRadius={props.cornerRadius} stroke={'black'}
+    return <path className={"arc"} d={props.path} fill={props.fill} stroke={'black'}
                  strokeWidth={props.strokeWidth} opacity={props.opacity}/>
 }
 
@@ -78,10 +78,6 @@ ArcPath.propTypes = {
     innerRadius: PropTypes.number.isRequired,
     outerRadius: PropTypes.number.isRequired,
     cornerRadius: PropTypes.number
-};
-
-Arc.defaultProps = {
-    cornerRadius: 0.0
 };
 
 export { ArcPath, Arc };

@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
 import '../App.css';
 import PropTypes from 'prop-types';
-import { Shell, Shells } from '../components/Shell.js'
-import { FeaturePath, Feature } from '../components/Feature.js'
-import { AxisLabels, Axis } from '../components/Axis.js'
+import { Shell, Shells } from '../components/Shell.js';
+import { FeaturePath, Feature } from '../components/Feature.js';
+import { AxisLabels, Axis } from '../components/Axis.js';
+import { Transform } from '../components/Utils.js';
 
 let randomColor = require('randomcolor');
 
@@ -42,19 +43,21 @@ class PlasmidPath extends Component {
                 r={this.props.radius}
                 stroke='black'
                 fill='none'
-                stroke-width={this.props.spineWidth}
+                strokeWidth={this.props.spineWidth}
             />
             {this.renderChildren()}</svg>;
     }
-}
+};
 
 
-function Transform(props) {
-    let children = React.Children.map(props.children,
-        child => {
-            return React.cloneElement(child, {...props})
-        });
-    return <g transform={"translate(" + props.cx + "," + props.cy + ")"}>{children}</g>
+function Highlight(props) {
+    return <Shells shellPadding={0} shellHeight={props.radius} shellOffset={0}>
+        <Shell shell={0}>
+            <FeaturePath start={props.start} end={props.end} cornerRadius={3.0}>
+                <Feature fill={randomColor({luminosity: 'light'})} opacity={0.1}/>
+            </FeaturePath>
+        </Shell>
+    </Shells>
 }
 
 
@@ -71,7 +74,7 @@ class Plasmid extends Component {
                             spineWidth={this.props.spineWidth} width={this.props.width}
                             height={this.props.height}>
             <Transform>
-                <Shells shellPadding={5} shellHeight={15} shellOffset={10}>
+                <Shells key={"shells1"} shellPadding={5} shellHeight={15} shellOffset={10}>
                     <Shell shell={0}>
                         <FeaturePath start={6000} end={8000} cornerRadius={3.0}>
                             <Feature fill={randomColor({luminosity: 'light'})}/>
@@ -86,9 +89,12 @@ class Plasmid extends Component {
                         </FeaturePath>
                     </Shell>
                 </Shells>
+                {/*<Highlight start={0} end={100} radius={this.props.radius} />*/}
                 <Axis r={this.props.radius} ticks={100} tickHeight={-10} stroke={'black'} weight={2.0}/>
                 <Axis r={this.props.radius} ticks={10} tickHeight={-20} stroke={'black'} weight={2.0}/>
                 <AxisLabels ticks={10} context={this.props.context} r={this.props.radius - 24.0} size={12} font={"sans-serif"}/>
+                <text textAnchor={'middle'} fontSize={20} fontFamily={"Verdana"}>pMOD-LTR2-Bleo-pGRR_ij-RGR_k</text>
+                <text y={20} textAnchor={'middle'} fontSize={15} fontFamily={"Verdana"}>{this.props.context + "bp"}</text>
             </Transform>
         </PlasmidPath>;
     }

@@ -1,39 +1,27 @@
 import PropTypes from "prop-types";
 import React, {Component} from "react";
 
-class Shell extends Component {
-    constructor(props) {
-        super(props);
-    }
-
-    renderChildren() {
-        let delta = this.props.shellPadding + this.props.shellHeight;
-        let innerRadius = this.props.shellOffset + this.props.radius + delta * this.props.shell;
-        let outerRadius = innerRadius + this.props.shellHeight;
-        return React.Children.map(this.props.children,
-            child => {
-                return React.cloneElement(child, {
-                    cx: this.props.cx,
-                    cy: this.props.cy,
-                    context: this.props.context,
-                    innerRadius: innerRadius,
-                    outerRadius: outerRadius
-                });
-            }
-        );
-    }
-
-    render() {
-        return <g className={"shell"}>
-            {this.renderChildren()}
-        </g>
-    }
+function Shell(props) {
+    let delta = props.shellPadding + props.shellHeight;
+    let innerRadius = props.shellOffset + props.radius + delta * props.shell;
+    let outerRadius = innerRadius + props.shellHeight;
+    return React.Children.map(props.children,
+        child => {
+            return React.cloneElement(child, {
+                cx: props.cx,
+                cy: props.cy,
+                context: props.context,
+                innerRadius: innerRadius,
+                outerRadius: outerRadius
+            });
+        }
+    );
 }
-
 
 class Shells extends Component {
     constructor(props) {
         super(props);
+        console.log(props.children)
     }
 
     renderChildren() {
@@ -53,31 +41,29 @@ class Shells extends Component {
     }
 
     render() {
-        return <g>{this.renderChildren()}</g>
+        return <g className={"shellgroup"}>{this.renderChildren()}</g>
     }
 }
 
 Shell.propTypes = {
-    shellPadding: PropTypes.number.isRequired,
-    shellHeight: PropTypes.number.isRequired,
-    radius: PropTypes.number.isRequirec,
+    shellPadding: PropTypes.number,
+    shellHeight: PropTypes.number,
+    radius: PropTypes.number,
     shellOffset: PropTypes.number,
-    cx: PropTypes.number.cx,
-    cy: PropTypes.number.cy,
-    context: PropTypes.number.isRequired,
-    radius: PropTypes.number.isRequired,
+    cx: PropTypes.number,
+    cy: PropTypes.number,
+    context: PropTypes.number,
 };
 
 
 Shells.propTypes = {
     shellPadding: PropTypes.number.isRequired,
     shellHeight: PropTypes.number.isRequired,
-    radius: PropTypes.number.isRequirec,
+    radius: PropTypes.number,
     shellOffset: PropTypes.number,
-    cx: PropTypes.number.cx,
-    cy: PropTypes.number.cy,
-    context: PropTypes.number.isRequired,
-    radius: PropTypes.number.isRequired,
+    cx: PropTypes.number,
+    cy: PropTypes.number,
+    context: PropTypes.number,
 };
 
-export { Shell, Shells };
+export {Shell, Shells};

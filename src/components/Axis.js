@@ -10,12 +10,9 @@ function Tick(props) {
     let x2 = props.outerRadius * Math.cos(theta);
     let y2 = -props.outerRadius * Math.sin(theta);
 
-    let label = <text x={x1} y={y1} textAncor={'middle'} alignmentBaseline={'middle'}>{props.label}</text>
-    return <g className={"tick"}>
-        <line x1={x1} y1={y1} x2={x2} y2={y2}
+    return <line x1={x1} y1={y1} x2={x2} y2={y2}
               stroke={props.stroke}
-              stroke-width={props.weight}/>
-        {label}</g>;
+              strokeWidth={props.weight}/>;
 }
 
 
@@ -26,7 +23,7 @@ function Axis(props) {
         let theta = Math.PI * 2.0 / props.ticks * i;
         let innerRadius = props.r;
         let outerRadius = innerRadius + props.tickHeight;
-        let tick = <Tick stroke={props.stroke} weight={props.weight}
+        let tick = <Tick key={i} stroke={props.stroke} weight={props.weight}
                          theta={theta} innerRadius={innerRadius}
                          outerRadius={outerRadius}/>;
         ticks.push(tick);
@@ -66,8 +63,8 @@ function AxisLabels(props) {
             rotate = 180;
             textAnchor = 'start';
         }
-        labels.push(<PositionLabel size={props.size} font={props.font} pos={pos} textAnchor={textAnchor} rotate={rotate}
-                                   label={label} r={props.r} context={props.context}/>)
+        labels.push(<PositionLabel key={i} size={props.size} font={props.font} pos={pos} textAnchor={textAnchor} rotate={rotate}
+                                   label={"" + label} r={props.r} context={props.context}/>)
     }
     return labels;
 }
@@ -89,7 +86,6 @@ AxisLabels.propTyptes = {
 Tick.propTypes = {
     innerRadius: PropTypes.number.isRequired,
     outerRadius: PropTypes.number.isRequired,
-    label: PropTypes.string.isRequired,
 };
 
 

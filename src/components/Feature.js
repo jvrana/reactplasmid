@@ -43,20 +43,20 @@ class Feature extends Component {
 FeaturePath.propTypes = {
     start: PropTypes.number.isRequired,
     end: PropTypes.number.isRequired,
-    innerRadius: PropTypes.number.isRequired,
-    outerRadius: PropTypes.number.isRequired,
-    cornerRadius: PropTypes.number.isRequired,
-    context: PropTypes.number.isRequired,
+    innerRadius: PropTypes.number,
+    outerRadius: PropTypes.number,
+    cornerRadius: PropTypes.number,
+    context: PropTypes.number,
 };
 
 Feature.propTypes = {
-    path: PropTypes.string.isRequired,
+    path: PropTypes.string,
     fill: PropTypes.string.isRequired,
     opacity: PropTypes.number,
-    start: PropTypes.number.isRequired,
-    end: PropTypes.number.isRequired,
-    innerRadius: PropTypes.number.isRequired,
-    outerRadius: PropTypes.number.isRequired,
+    start: PropTypes.number,
+    end: PropTypes.number,
+    innerRadius: PropTypes.number,
+    outerRadius: PropTypes.number,
     cornerRadius: PropTypes.number,
 };
 
