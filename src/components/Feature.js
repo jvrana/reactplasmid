@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import {Component} from "react";
 import {ArcPath, Arc} from "./Arc.js"
 import {Tick, PositionLabel} from "./Axis.js"
-
+import { position2theta } from "./Utils.js"
 var React = require('react');
 
 
@@ -13,7 +13,21 @@ class Feature extends Component {
             opacity: 1.0,
             tickOpacity: 0.0
         }
+        this.onMouseEnter = this.onMouseEnter.bind(this);
+        this.onMouseExit = this.onMouseExit.bind(this);
     }
+
+    static propTypes = {
+        path: PropTypes.string,
+        fill: PropTypes.string.isRequired,
+        opacity: PropTypes.number,
+        start: PropTypes.number.isRequired,
+        end: PropTypes.number.isRequired,
+        innerRadius: PropTypes.number,
+        outerRadius: PropTypes.number,
+        cornerRadius: PropTypes.number,
+    };
+
 
     onMouseEnter() {
         this.setState({
@@ -30,12 +44,12 @@ class Feature extends Component {
     }
 
     render() {
-        let radStart = 2.0 * Math.PI * this.props.start / this.props.context;
-        let radEnd = 2.0 * Math.PI * this.props.end / this.props.context;
+        let radStart = position2theta(this.props.start, this.props.context);
+        let radEnd = position2theta(this.props.end, this.props.context);
         let labelPos = this.props.radius - 100.0;
         return <g className={"feature"}
-                  onMouseEnter={() => {this.onMouseEnter()}}
-                  onMouseLeave={() => {this.onMouseExit()}}>
+                  onMouseEnter={this.onMouseEnter}
+                  onMouseLeave={this.onMouseExit}>
             <ArcPath start={radStart} end={radEnd} innerRadius={this.props.innerRadius} outerRadius={this.props.outerRadius}
                      cornerRadius={this.props.cornerRadius} radius={this.props.radius}
                      context={this.props.context}>
@@ -54,16 +68,27 @@ class Feature extends Component {
 
 }
 
-Feature.propTypes = {
-    path: PropTypes.string,
-    fill: PropTypes.string.isRequired,
-    opacity: PropTypes.number,
+
+function Highlight(props) {
+    let radStart = position2theta(props.start, props.context);
+    let radEnd = position2theta(props.start, props.context);
+    return <g className={"highlight"} >
+        <ArcPath start={radStart} end={radEnd} innerRadius={props.ir} outerRadius={props.or}
+                 cornerRadius={0} radius={props.radius}
+                 context={props.context}>
+            <Arc fill={props.fill} opacity={props.opacity}/>
+        </ArcPath></g>;
+}
+
+Highlight.propTypes = {
     start: PropTypes.number.isRequired,
     end: PropTypes.number.isRequired,
-    innerRadius: PropTypes.number,
-    outerRadius: PropTypes.number,
-    cornerRadius: PropTypes.number,
+    lr: PropTypes.number.isRequired,
+    ir: PropTypes.number.isRequired,
+    or: PropTypes.number.isRequired,
+    fill: PropTypes.string,
+    opacity: PropTypes.number,
 };
 
 
-export { Feature};
+export { Highlight, Feature };

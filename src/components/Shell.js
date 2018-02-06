@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import React, {Component} from "react";
+import React from "react";
 
 function Shell(props) {
     let delta = props.shellPadding + props.shellHeight;
@@ -12,36 +12,29 @@ function Shell(props) {
                 innerRadius: innerRadius,
                 outerRadius: outerRadius,
                 radius: props.radius,
-                context: props.context,
             });
         }
     );
 }
 
-class Shells extends Component {
-    constructor(props) {
-        super(props);
-    }
 
-    renderChildren() {
-        return React.Children.map(this.props.children,
+
+function Shells(props) {
+    const children = React.Children.map(props.children,
             child => {
                 if (child.type === Shell) {
                     return React.cloneElement(child, {
-                        context: this.props.context,
-                        shellPadding: this.props.shellPadding,
-                        shellHeight: this.props.shellHeight,
-                        shellOffset: this.props.shellOffset,
-                        radius: this.props.radius,
+                        context: props.context,
+                        shellPadding: props.shellPadding,
+                        shellHeight: props.shellHeight,
+                        shellOffset: props.shellOffset,
+                        radius: props.radius,
                     });
                 }
             }
         );
-    }
 
-    render() {
-        return <g className={"shellgroup"}>{this.renderChildren()}</g>
-    }
+    return <g className={"shellgroup"}>{children}</g>
 }
 
 Shell.propTypes = {

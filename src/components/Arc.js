@@ -3,61 +3,39 @@ import * as d3 from "d3";
 var React = require('react');
 
 
-class ArcPath extends React.Component {
+function ArcPath(props) {
 
-    constructor(props) {
-        super(props);
-    }
+    const pathData = d3.arc()
+            .innerRadius(props.innerRadius)
+            .outerRadius(props.outerRadius)
+            .cornerRadius(props.cornerRadius)
+            .startAngle(props.start)
+            .endAngle(props.end);
 
-    arcGenerator() {
-        return d3.arc()
-            .innerRadius(this.props.innerRadius)
-            .outerRadius(this.props.outerRadius)
-            .cornerRadius(this.props.cornerRadius)
-    }
+    const centroid = pathData.centroid();
 
-    arcPath() {
-        var arcGen = this.arcGenerator();
-
-        var pathData = arcGen({
-            startAngle: this.props.start,
-            endAngle: this.props.end,
-        });
-
-        return pathData;
-    }
-
-    arcCentroid() {
-        return this.arcGenerator().centroid({startAngle: this.props.start, endAngle: this.props.end});
-    }
-
-    renderChildren() {
-        return React.Children.map(this.props.children,
+    const children = React.Children.map(props.children,
             child => {
                 return React.cloneElement(child, {
-                    centroidx: this.arcCentroid()[0],
-                    centroidy: this.arcCentroid()[1],
-                    path: this.arcPath(),
-                    radius: this.props.radius,
-                    innerRadius: this.props.innerRadius,
-                    outerRadius: this.props.outerRadius,
-                    context: this.props.context
+                    centroidx: centroid[0],
+                    centroidy: centroid[1],
+                    path: pathData(),
+                    radius: props.radius,
+                    innerRadius: props.innerRadius,
+                    outerRadius: props.outerRadius,
+                    context: props.context
                 });
             }
         );
-    }
 
-    render() {
-        return <g className={"arcpath"}>
-            {this.renderChildren()}
-        </g>
-    }
+    return <g className={"arcpath"}>{children}</g>;
 }
 
 function Arc(props) {
     return <path className={"arc"} d={props.path} fill={props.fill} stroke={'black'}
                  strokeWidth={props.strokeWidth} opacity={props.opacity}/>
 }
+
 
 Arc.propTypes = {
     path: PropTypes.string.isRequired,
@@ -78,6 +56,11 @@ ArcPath.propTypes = {
     innerRadius: PropTypes.number.isRequired,
     outerRadius: PropTypes.number.isRequired,
     cornerRadius: PropTypes.number
+};
+
+ArcPath.defaultProps = {
+    strokeWidth: 1.0,
+    opacity: 1.0,
 };
 
 export { ArcPath, Arc };

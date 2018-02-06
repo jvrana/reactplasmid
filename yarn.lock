@@ -1723,6 +1723,13 @@ currently-unhandled@^0.4.1:
   dependencies:
     array-find-index "^1.0.1"
 
+"cursor@file:../../Documents/Github/react-cursor-position":
+  version "2.4.0"
+  dependencies:
+    object-assign "^4.1.1"
+    object.omit "^3.0.0"
+    prop-types "^15.6.0"
+
 d3-array@1, d3-array@1.2.1, d3-array@^1.2.0:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/d3-array/-/d3-array-1.2.1.tgz#d1ca33de2f6ac31efadb8e050a021d7e2396d5dc"
@@ -5350,9 +5357,15 @@ rc@^1.0.1, rc@^1.1.6, rc@^1.1.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
-react-cursor-position@^2.4.0:
+"react-cursor-position@file:../../Documents/Github/react-cursor-position":
   version "2.4.0"
-  resolved "https://registry.yarnpkg.com/react-cursor-position/-/react-cursor-position-2.4.0.tgz#e11c8859ec72592bc1b928f1f98e9bd580c26e5b"
+  dependencies:
+    object-assign "^4.1.1"
+    object.omit "^3.0.0"
+    prop-types "^15.6.0"
+
+"react-cursor-position@file:/Users/justinvrana/Documents/Github/react-cursor-position":
+  version "2.4.0"
   dependencies:
     object-assign "^4.1.1"
     object.omit "^3.0.0"
