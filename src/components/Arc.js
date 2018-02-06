@@ -4,13 +4,22 @@ var React = require('react');
 
 
 function ArcPath(props) {
+    let start = props.start;
+    let end = props.end;
+
+    let _end = end - start;
+    if (_end < 0) {
+        _end = 2*Math.PI + _end;
+    }
+
+    let rot = "rotate(" + 180 * start / Math.PI + ")";
 
     const pathData = d3.arc()
             .innerRadius(props.innerRadius)
             .outerRadius(props.outerRadius)
             .cornerRadius(props.cornerRadius)
-            .startAngle(props.start)
-            .endAngle(props.end);
+            .startAngle(0)
+            .endAngle(_end);
 
     const centroid = pathData.centroid();
 
@@ -23,12 +32,12 @@ function ArcPath(props) {
                     radius: props.radius,
                     innerRadius: props.innerRadius,
                     outerRadius: props.outerRadius,
-                    context: props.context
+                    context: props.context,
                 });
             }
         );
 
-    return <g className={"arcpath"}>{children}</g>;
+    return <g className={"arcpath"} transform={rot}>{children}</g>;
 }
 
 function Arc(props) {

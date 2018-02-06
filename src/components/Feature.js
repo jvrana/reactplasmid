@@ -4,6 +4,7 @@ import {ArcPath, Arc} from "./Arc.js"
 import {Tick, PositionLabel} from "./Axis.js"
 import {position2theta} from "./Utils.js"
 
+let randomColor = require('randomcolor');
 var React = require('react');
 
 
@@ -12,22 +13,33 @@ class Feature extends Component {
         super(props);
         this.state = {
             opacity: 1.0,
-            tickOpacity: 0.0
-        }
+            tickOpacity: 0.0,
+            fill: this.props.fill,
+        };
         this.onMouseEnter = this.onMouseEnter.bind(this);
         this.onMouseExit = this.onMouseExit.bind(this);
     }
 
     static propTypes = {
         path: PropTypes.string,
-        fill: PropTypes.string.isRequired,
+        fill: PropTypes.string,
         opacity: PropTypes.number,
         start: PropTypes.number.isRequired,
         end: PropTypes.number.isRequired,
         innerRadius: PropTypes.number,
         outerRadius: PropTypes.number,
         cornerRadius: PropTypes.number,
+        stroke: PropTypes.string,
+        strokeWidth: PropTypes.number,
     };
+
+    componentWillMount() {
+        if (!this.state.fill || this.state.fill === 'none') {
+            this.setState({
+                fill: randomColor({luminosity: 'light'})
+            })
+        }
+    }
 
 
     onMouseEnter() {
@@ -55,15 +67,15 @@ class Feature extends Component {
                      outerRadius={this.props.outerRadius}
                      cornerRadius={this.props.cornerRadius} radius={this.props.radius}
                      context={this.props.context}>
-                <Arc path={this.props.path} fill={this.props.fill} opacity={this.state.opacity}/>
+                <Arc path={this.props.path} fill={this.state.fill} opacity={this.state.opacity} stroke={this.props.stroke} strokeWidth={this.props.strokeWidth}/>
             </ArcPath>
-            <PositionLabel pos={this.props.start} r={this.props.outerRadius} labelLength={50} offsetLength={15}
+            <PositionLabel pos={this.props.start} r={this.props.outerRadius + 5} labelLength={this.props.radius - this.props.outerRadius + 20} offsetLength={20}
                            labelOffsetX={10} opacity={this.state.tickOpacity}
-                           labelOffsetY={0} stroke={'black'} fontSize={15}
+                           labelOffsetY={0} stroke={'red'} fontSize={15} strokeWidth={2}
                            context={this.props.context} label={Math.round(this.props.start)}/>
-            <PositionLabel pos={this.props.end} r={this.props.outerRadius} labelLength={50} offsetLength={15}
+            <PositionLabel pos={this.props.end} r={this.props.outerRadius + 5} labelLength={this.props.radius - this.props.outerRadius + 20} offsetLength={20}
                            labelOffsetX={10} opacity={this.state.tickOpacity}
-                           labelOffsetY={0} stroke={'black'} fontSize={15}
+                           labelOffsetY={0} stroke={'red'} fontSize={15} strokeWidth={2}
                            context={this.props.context} label={Math.round(this.props.end)}/>
             {/*<RotatedPositionLabel context={this.props.context} label={this.props.start} pos={this.props.start}*/}
             {/*r={labelPos} fontSize={12} fontFamily={"Verdana"} opacity={this.state.tickOpacity} align={true}/>*/}
