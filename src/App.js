@@ -10,7 +10,7 @@ class App extends Component {
           <h2>React Plasmid</h2>
         </header>
         <div>
-            <Plasmid radius={200} width={750} height={750} spineWidth={5.0} context={9584}/>
+            <Plasmid radius={200} width={750} height={750} spineWidth={5.0} context={9584} name={"peGFP"}/>
         </div>
       </div>
     );

@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import {Shell, Shells} from '../components/Shell.js';
 import {Feature, Highlight} from '../components/Feature.js';
 import {AxisLabels, Axis} from '../components/Axis.js';
+import {PositionLabel} from '../components/Axis.js';
 import ReactCursorPosition from 'react-cursor-position';
 
 
@@ -19,15 +20,23 @@ function PlasmidPath(props) {
         })
     });
 
-    return <svg width={props.width} height={props.height}>
+    let stylesheet = () => {
+        return { __html: "<?xml-stylesheet type=\"text/css\" href=\"svg-stylesheet.css\" ?>"}
+    };
+
+    return <svg width={props.width} height={props.height} xmlns="http://www.w3.org/2000/svg"
+             xmlnsXlink="http://www.w3.org/1999/xlink">
+                <style>
+                    { `circle.spine { fill:black }` }
+                </style>
         <g transform={"translate(" + x + "," + y + ")"}>
             <circle
                 className="spine"
                 cx={0}
                 cy={0}
                 r={props.radius}
-                stroke='black'
                 fill='none'
+                stroke={props.spineStroke}
                 strokeWidth={props.spineWidth}
             />
             {children}
@@ -57,35 +66,40 @@ class Plasmid extends Component {
         height: PropTypes.number.isRequired,
         radius: PropTypes.number.isRequired,
         spineWidth: PropTypes.number.isRequired,
+        spineStroke: PropTypes.number,
+    };
+
+    static defaultProps = {
+        spineStroke: 'black',
     };
 
     render() {
         let cx = this.props.width / 2.0;
         let cy = this.props.height / 2.0;
         return <PlasmidPath cx={cx} cy={cy}
-                         context={this.props.context} radius={this.props.radius}
-                         spineWidth={this.props.spineWidth} width={this.props.width}
-                         height={this.props.height}>
-                <Shells key={"shells1"} shellPadding={5} shellHeight={15} shellOffset={10}>
-                    <Shell shell={0}>
-                        <Feature start={3000} end={5000} cornerRadius={3.0} fill={this.state.colors[0]}/>
-                        <Feature start={6000} end={8000} cornerRadius={3.0} fill={this.state.colors[1]}/>
-                    </Shell>
-                    <Shell shell={1}>
-                        <Feature start={0} end={4000} cornerRadius={3.0} fill={this.state.colors[2]}/>
-                    </Shell>
-                </Shells>
-                <Axis r={this.props.radius} ticks={100} tickHeight={-10} stroke={'black'} weight={2.0}/>
-                <Axis r={this.props.radius} ticks={10} tickHeight={-20} stroke={'black'} weight={2.0}/>
-                <AxisLabels ticks={10} context={this.props.context} r={this.props.radius - 25.0} fontSize={12}
-                            fontFamily={"sans-serif"}/>
-                <text textAnchor={'middle'} fontSize={20} fontFamily={"Verdana"}>pMOD-LTR2-Bleo-pGRR_ij-RGR_k</text>
-                <text y={20} textAnchor={'middle'} fontSize={20}
-                      fontFamily={"Verdana"}>{this.props.context + "bp"}</text>
-                <ReactCursorPosition cursorTag={'g'}>
-                    <rect x={0} y={0} width={this.props.width} height={this.props.height} fill={'none'} stroke={'none'} />
-                </ReactCursorPosition>
-            </PlasmidPath>
+                            context={this.props.context} radius={this.props.radius}
+                            spineWidth={this.props.spineWidth} spineStroke={this.props.spineStroke} width={this.props.width}
+                            height={this.props.height}>
+            <Shells key={"shells1"} shellPadding={5} shellHeight={15} shellOffset={10}>
+                <Shell shell={0}>
+                    <Feature start={3000} end={5000} cornerRadius={3.0} fill={this.state.colors[0]}/>
+                    <Feature start={6000} end={8000} cornerRadius={3.0} fill={this.state.colors[1]}/>
+                </Shell>
+                <Shell shell={1}>
+                    <Feature start={0} end={4000} cornerRadius={3.0} fill={this.state.colors[2]}/>
+                </Shell>
+            </Shells>
+            <Axis r={this.props.radius} ticks={100} tickHeight={-10} stroke={'black'} weight={2.0}/>
+            <Axis r={this.props.radius} ticks={10} tickHeight={-20} stroke={'black'} weight={2.0}/>
+            <AxisLabels ticks={10} context={this.props.context} r={this.props.radius - 25.0} fontSize={15}
+                        fontFamily={"sans-serif"}/>
+            <text textAnchor={'middle'} fontSize={20} fontFamily={"Verdana"}>{this.props.name}</text>
+            <text y={20} textAnchor={'middle'} fontSize={12}
+                  fontFamily={"Verdana"}>{this.props.context + "bp"}</text>
+            <ReactCursorPosition cursorTag={'g'}>
+                <rect x={0} y={0} width={this.props.width} height={this.props.height} fill={'none'} stroke={'none'}/>
+            </ReactCursorPosition>
+        </PlasmidPath>
 
     }
 }
