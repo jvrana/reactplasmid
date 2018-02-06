@@ -28,6 +28,7 @@ function PlasmidPath(props) {
         {/*{ `circle.spine { fill:none }` }*/}
         {/*</style>*/}
         <g transform={"translate(" + x + "," + y + ")"}>
+            {children}
             <circle
                 className="spine"
                 cx={0}
@@ -37,7 +38,6 @@ function PlasmidPath(props) {
                 stroke={props.spineStroke}
                 strokeWidth={props.spineWidth}
             />
-            {children}
         </g>
     </svg>;
 }
@@ -105,11 +105,15 @@ class Plasmid extends Component {
         majorTickWidth: PropTypes.number,
         minorTickStroke: PropTypes.string,
         majorTickStroke: PropTypes.string,
+        minorTickOffset: PropTypes.number,
+        majorTickOffset: PropTypes.number,
+        axisLabelOffset: PropTypes.number,
         tickLabelFontSize: PropTypes.number,
         nameFontSize: PropTypes.number,
         infoFontSize: PropTypes.number,
 
         // features
+        featureData: PropTypes.arrayOf(Object).isRequired,
         featureCornerRadius: PropTypes.number,
         featureStroke: PropTypes.number,
         featureStrokeWidth: PropTypes.number,
@@ -131,6 +135,9 @@ class Plasmid extends Component {
         majorTickWidth: 2,
         minorTickStroke: 'black',
         majorTickStroke: 'black',
+        minorTickOffset: 0,
+        majorTickOffset: 0,
+        axisLabelOffset: -30,
         tickLabelFontSize: 15,
 
         // name
@@ -187,7 +194,12 @@ class Plasmid extends Component {
                     const feature = features[featureNum];
                     let _start = feature.start;
                     let _end = feature.end;
-                    if ((_start <= data.start && data.start <= _end) || (_start <= data.end && data.end <= _end)) {
+                    let operator = (a, b) => { return a && b };
+                    if (_start > _end) {
+                        operator = (a, b) => { return a || b };
+                    }
+                    console.log(_start, data.start, data.end, _end);
+                    if (operator(_start <= data.start, data.start <= _end) || operator(_start <= data.end, data.end <= _end)) {
                             console.log("Did not pass");
                             console.log(_start <= data.start <= _end);
                             console.log(_start, data.start, data.end, _end);
@@ -231,37 +243,24 @@ class Plasmid extends Component {
     render() {
         let cx = this.props.width / 2.0;
         let cy = this.props.height / 2.0;
-        let featureData = [
-            {start: 0, end: 1000,},
-            {start: 1001, end: 1100},
-            {start: 1050, end: 2000},
-            {start: 1000, end: 5000},
-            {start: 500, end: 3000},
-            {start: 5100, end: 100}
-            // {start: Math.floor(Math.random() * this.props.context), end: Math.floor(Math.random() * this.props.context)},
-            // {start: Math.floor(Math.random() * this.props.context), end: Math.floor(Math.random() * this.props.context)},
-            // {start: Math.floor(Math.random() * this.props.context), end: Math.floor(Math.random() * this.props.context)},
-            // {start: Math.floor(Math.random() * this.props.context), end: Math.floor(Math.random() * this.props.context)},
-            // {start: Math.floor(Math.random() * this.props.context), end: Math.floor(Math.random() * this.props.context)},
-        ];
 
         return <PlasmidPath cx={cx} cy={cy}
                             context={this.props.context} radius={this.props.radius}
                             spineWidth={this.props.spineWidth} spineStroke={this.props.spineStroke}
                             width={this.props.width}
                             height={this.props.height}>
-            {this.renderFeatures(featureData)}
-            <Axis r={this.props.radius} ticks={this.props.minorTicks} tickHeight={this.props.minorTickHeight}
-                  stroke={this.props.minorTickStroke} weight={this.props.minorTickWidth}/>
-            <Axis r={this.props.radius} ticks={this.props.majorTicks} tickHeight={this.props.majorTickHeight}
-                  stroke={this.props.majorTickStroke} weight={this.props.majorTickWidth}/>
-            <AxisLabels ticks={this.props.majorTicks} context={this.props.context} r={this.props.radius - 25.0}
-                        fontSize={this.props.tickLabelFontSize}
-                        fontFamily={"sans-serif"}/>
             <text textAnchor={'middle'} fontSize={this.props.nameFontSize}
                   fontFamily={"Verdana"}>{this.props.name}</text>
             <text y={20} textAnchor={'middle'} fontSize={this.props.infoFontSize}
                   fontFamily={"Verdana"}>{this.props.context + "bp"}</text>
+            {this.renderFeatures(this.props.featureData)}
+            <Axis r={this.props.radius + this.props.minorTickOffset} ticks={this.props.minorTicks} tickHeight={this.props.minorTickHeight}
+                  stroke={this.props.minorTickStroke} weight={this.props.minorTickWidth}/>
+            <Axis r={this.props.radius + this.props.majorTickOffset} ticks={this.props.majorTicks} tickHeight={this.props.majorTickHeight}
+                  stroke={this.props.majorTickStroke} weight={this.props.majorTickWidth}/>
+            <AxisLabels ticks={this.props.majorTicks} context={this.props.context} r={this.props.radius} axisLabelOffset={this.props.axisLabelOffset}
+                        fontSize={this.props.tickLabelFontSize}
+                        fontFamily={"sans-serif"} inside={this.props.axisLabelInside}/>
         </PlasmidPath>
 
     }
