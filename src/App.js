@@ -16,40 +16,42 @@ class App extends Component {
             {start: 500, end: 3000},
             {start: 5100, end: 100},
             {start: 6000, end: 8000},
-            {start: 4000, end: 150}
+            {start: 5000, end: 300}
         ];
 
         let minorTickStyle = {
-            minorTicks: 150,
-            minorTickHeight: -10,
-            minorTickOffset: 0,
-            minorTickStroke: 'black',
-            minorTickWidth: 1,
+            minorTicks: 350,
+            minorTickHeight: -30,
+            minorTickOffset: 15,
+            minorTickStroke: 'gray',
+            minorTickWidth: 0.5,
         };
 
         let majorTickStyle = {
             majorTicks: 10,
-            majorTickHeight: 10,
+            majorTickHeight: 20,
             majorTickOffset: 0,
-            majorTickStroke: "blue",
+            majorTickStroke: "black",
             majorTickWidth: 3,
-            axisLabelOffset: 15,
-            tickLabelFontSize: 12,
+            axisLabelOffset: 25,
+            tickLabelFontSize: 10,
         };
 
         let featureStyle = {
-            shellHeight: -15,
-            featureCornerRadius: 5,
-            shellOffset: -20,
+            shellHeight: -12,
+            featureCornerRadius: 10,
+            shellOffset: -25,
             shellPadding: -5,
+            featureStrokeWidth: 0,
+            featureStroke: 'white'
         };
 
         let plasmidInfo = {
             radius: 200,
             height: 750,
             width: 750,
-            spineStroke: 'gray',
-            spineWidth: 5.0,
+            spineStroke: 'white',
+            spineWidth: 10.0,
             name: "peGFP",
             context: 9584,
             nameFontSize: 40,

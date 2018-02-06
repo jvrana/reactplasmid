@@ -2,7 +2,11 @@
 
 A small react library for displaying plasmids.
 
+## Gallery
+
 ![example](images/example.png)
+![example](images/example2.png)
+![example](images/example3.png)
 
 ## Requirements
 
