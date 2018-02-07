@@ -5,7 +5,7 @@ import BootstrapTest from './components/Test';
 import {Panel, Grid, Row, Col, Tab, Tabs, Alert, Jumbotron} from 'react-bootstrap';
 import {PlasmidContainer} from './components/PlasmidContainer';
 import {PlasmidViewer} from "./components/PlasmidViewer";
-import { plasmidStyle } from './components/plasmidStyles/style1.js'
+import { plasmidStyle } from './components/plasmidStyles/bright.js'
 
 let randomColor = require('randomcolor');
 

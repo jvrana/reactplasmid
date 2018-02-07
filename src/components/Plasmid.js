@@ -102,7 +102,7 @@ class Plasmid extends Component {
         width: PropTypes.number.isRequired,
         height: PropTypes.number.isRequired,
         radius: PropTypes.number.isRequired,
-        spineWidth: PropTypes.number.isRequired,
+        spineWidth: PropTypes.number,
         spineStroke: PropTypes.number,
         minorTicks: PropTypes.number,
         majorTicks: PropTypes.number,
@@ -133,6 +133,7 @@ class Plasmid extends Component {
     static defaultProps = {
         // spine
         spineStroke: 'black',
+        spineWidth: 5,
 
         // axis
         minorTicks: 100,
