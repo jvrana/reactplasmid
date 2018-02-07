@@ -30,3 +30,7 @@
 circle.spine {
   fill: "black";
 }
+
+div.plasmidmapview {
+  border-style: ridge;
+}

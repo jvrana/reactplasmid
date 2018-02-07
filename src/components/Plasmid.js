@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import {Shell, Shells} from '../components/Shell.js';
 import {Feature, Highlight} from '../components/Feature.js';
 import {AxisLabels, Axis} from '../components/Axis.js';
+import {Popover, Overlay, Tooltip, Button } from 'react-bootstrap';
+import ReactDOM from 'react-dom';
 
 let randomColor = require('randomcolor');
 
@@ -21,7 +23,12 @@ function PlasmidPath(props) {
         return {__html: "<?xml-stylesheet type=\"text/css\" href=\"svg-stylesheet.css\" ?>"}
     };
 
-    return <svg width={props.width} height={props.height}>
+    return <svg
+        width={props.width}
+        height={props.height}
+        viewBox={ "0 0 " + props.width + " " + props.height }
+        // width={props.width} height={props.height}
+    >
         {/*xmlns="http://www.w3.org/2000/svg"*/}
         {/*xmlnsXlink="http://www.w3.org/1999/xlink">*/}
         {/*<style>*/}
@@ -85,8 +92,8 @@ class Plasmid extends Component {
         super(props);
         this.state = {
             x: 0, y: 0,
-            colors: randomColor({luminosity: 'light', count: 20})
         };
+        this.getTarget = this.getTarget.bind(this);
     }
 
 
@@ -120,6 +127,7 @@ class Plasmid extends Component {
         shellPadding: PropTypes.number,
         shellHeight: PropTypes.number,
         shellOffset: PropTypes.number,
+        featureRandomColorGenerator: PropTypes.func,
     };
 
     static defaultProps = {
@@ -151,6 +159,7 @@ class Plasmid extends Component {
         shellPadding: 5,
         shellHeight: 20,
         shellOffset: 10,
+        featureRandomColorGenerator: () => {return randomColor({'luminosity': 'light'})},
     };
 
     sortFeatureData(featureData) {
@@ -172,6 +181,18 @@ class Plasmid extends Component {
         }));
         return featureData.reverse();
 
+    }
+
+    renderPopup() {
+        return <Popover
+            id="popover-basic"
+            placement="right"
+            positionLeft={200}
+            positionTop={50}
+            title="Popover right"
+        >
+            And here's some <strong>amazing</strong> content. It's very engaging. right?
+        </Popover>
     }
 
     renderFeatures(featureData) {
@@ -232,6 +253,8 @@ class Plasmid extends Component {
                                 cornerRadius={this.props.featureCornerRadius}
                                 stroke={this.props.featureStroke}
                                 strokeWidth={this.props.featureStrokeWidth}
+                                featureRandomColorGenerator={this.props.featureRandomColorGenerator}
+                                onFeatureHover={ () => { console.log("Feature " + s + " " + f + " entered!") } }
                                 {...data}/>
                         })}
                     </Shell>
@@ -240,29 +263,38 @@ class Plasmid extends Component {
         </Shells>
     }
 
+    getTarget() {
+        return ReactDOM.findDOMNode(this.target);
+    }
+
     render() {
+        const sharedProps = {
+            container: this,
+            target: this.getTarget,
+        };
         let cx = this.props.width / 2.0;
         let cy = this.props.height / 2.0;
 
-        return <PlasmidPath cx={cx} cy={cy}
+        return <div className={"plasmidmap"} style={{height: this.props.height, width: this.props.width, margin: "0 auto"}}>
+                <PlasmidPath cx={cx} cy={cy}
                             context={this.props.context} radius={this.props.radius}
                             spineWidth={this.props.spineWidth} spineStroke={this.props.spineStroke}
                             width={this.props.width}
                             height={this.props.height}>
-            <text textAnchor={'middle'} fontSize={this.props.nameFontSize}
-                  fontFamily={"Verdana"}>{this.props.name}</text>
-            <text y={20} textAnchor={'middle'} fontSize={this.props.infoFontSize}
-                  fontFamily={"Verdana"}>{this.props.context + "bp"}</text>
-            {this.renderFeatures(this.props.featureData)}
-            <Axis r={this.props.radius + this.props.minorTickOffset} ticks={this.props.minorTicks} tickHeight={this.props.minorTickHeight}
-                  stroke={this.props.minorTickStroke} weight={this.props.minorTickWidth}/>
-            <Axis r={this.props.radius + this.props.majorTickOffset} ticks={this.props.majorTicks} tickHeight={this.props.majorTickHeight}
-                  stroke={this.props.majorTickStroke} weight={this.props.majorTickWidth}/>
-            <AxisLabels ticks={this.props.majorTicks} context={this.props.context} r={this.props.radius} axisLabelOffset={this.props.axisLabelOffset}
-                        fontSize={this.props.tickLabelFontSize}
-                        fontFamily={"sans-serif"} inside={this.props.axisLabelInside}/>
-        </PlasmidPath>
-
+                <text textAnchor={'middle'} fontSize={this.props.nameFontSize}
+                      fontFamily={"Verdana"}>{this.props.name}</text>
+                <text y={20} textAnchor={'middle'} fontSize={this.props.infoFontSize}
+                      fontFamily={"Verdana"}>{this.props.context + "bp"}</text>
+                {this.renderFeatures(this.props.featureData)}
+                <Axis r={this.props.radius + this.props.minorTickOffset} ticks={this.props.minorTicks} tickHeight={this.props.minorTickHeight}
+                      stroke={this.props.minorTickStroke} weight={this.props.minorTickWidth}/>
+                <Axis r={this.props.radius + this.props.majorTickOffset} ticks={this.props.majorTicks} tickHeight={this.props.majorTickHeight}
+                      stroke={this.props.majorTickStroke} weight={this.props.majorTickWidth}/>
+                <AxisLabels ticks={this.props.majorTicks} context={this.props.context} r={this.props.radius} axisLabelOffset={this.props.axisLabelOffset}
+                            fontSize={this.props.tickLabelFontSize}
+                            fontFamily={"sans-serif"} inside={this.props.axisLabelInside}/>
+            </PlasmidPath>
+        </div>
     }
 }
 

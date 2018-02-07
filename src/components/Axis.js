@@ -22,7 +22,7 @@ function Axis(props) {
         let theta = Math.PI * 2.0 / props.ticks * i;
         let innerRadius = props.r;
         let outerRadius = innerRadius + props.tickHeight;
-        let tick = <Tick key={i + "ljlj"} stroke={props.stroke} weight={props.weight}
+        let tick = <Tick key={i} stroke={props.stroke} weight={props.weight}
                          theta={theta} innerRadius={innerRadius}
                          outerRadius={outerRadius}/>;
         ticks.push(tick);

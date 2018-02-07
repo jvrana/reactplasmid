@@ -31,12 +31,17 @@ class Feature extends Component {
         cornerRadius: PropTypes.number,
         stroke: PropTypes.string,
         strokeWidth: PropTypes.number,
+        featureRandomColorGenerator: PropTypes.func,
+    };
+
+    static defaultProps = {
+        featureRandomColorGenerator: () => { return randomColor({'luminosity': 'light'})},
     };
 
     componentWillMount() {
         if (!this.state.fill || this.state.fill === 'none') {
             this.setState({
-                fill: randomColor({luminosity: 'light'})
+                fill: this.props.featureRandomColorGenerator()
             })
         }
     }
@@ -47,6 +52,7 @@ class Feature extends Component {
             opacity: 0.5,
             tickOpacity: 1.0,
         });
+        this.props.onFeatureHover();
     }
 
     onMouseExit() {

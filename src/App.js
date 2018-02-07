@@ -1,6 +1,13 @@
 import React, {Component} from 'react';
 import './App.css';
 import Plasmid from './components/Plasmid';
+import BootstrapTest from './components/Test';
+import {Panel, Grid, Row, Col, Tab, Tabs, Alert, Jumbotron} from 'react-bootstrap';
+import {PlasmidContainer} from './components/PlasmidContainer';
+import {PlasmidViewer} from "./components/PlasmidViewer";
+import { plasmidStyle } from './components/plasmidStyles/style1.js'
+
+let randomColor = require('randomcolor');
 
 class App extends Component {
     render() {
@@ -19,60 +26,54 @@ class App extends Component {
             {start: 5000, end: 300}
         ];
 
-        let minorTickStyle = {
-            minorTicks: 350,
-            minorTickHeight: -30,
-            minorTickOffset: 15,
-            minorTickStroke: 'gray',
-            minorTickWidth: 0.5,
-        };
-
-        let majorTickStyle = {
-            majorTicks: 10,
-            majorTickHeight: 20,
-            majorTickOffset: 0,
-            majorTickStroke: "black",
-            majorTickWidth: 3,
-            axisLabelOffset: 25,
-            tickLabelFontSize: 10,
-        };
-
-        let featureStyle = {
-            shellHeight: -12,
-            featureCornerRadius: 10,
-            shellOffset: -25,
-            shellPadding: -5,
-            featureStrokeWidth: 0,
-            featureStroke: 'white'
-        };
 
         let plasmidInfo = {
             radius: 200,
-            height: 750,
-            width: 750,
-            spineStroke: 'white',
-            spineWidth: 10.0,
+            height: 500,
+            width: 500,
             name: "peGFP",
             context: 9584,
-            nameFontSize: 40,
-            infoFontSize: 20,
-        }
+        };
 
 
-        return (
-            <div className="App">
-                <header className="App-header">
-                    <h2>React Plasmid</h2>
-                </header>
-                <div>
-                    <Plasmid {...plasmidInfo}
-                             {...minorTickStyle}
-                             {...majorTickStyle}
-                             {...featureStyle}
-                             featureData={featureData}/>
-                </div>
-            </div>
-        );
+        const dummySentences = [
+            'Lorem ipsum dolor sit amet, consectetuer adipiscing elit.',
+            'Donec hendrerit tempor tellus.',
+            'Donec pretium posuere tellus.',
+            'Proin quam nisl, tincidunt et, mattis eget, convallis nec, purus.',
+            'Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.',
+            'Nulla posuere.',
+            'Donec vitae dolor.',
+            'Nullam tristique diam non turpis.',
+            'Cras placerat accumsan nulla.',
+            'Nullam rutrum.',
+            'Nam vestibulum accumsan nisl.'
+        ];
+
+        return <div className="App">
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+            </link>
+
+            <Jumbotron>
+                <h1>ReactPlasmid</h1>
+                <p>
+                    Beautiful plasmid visualization for all.
+                </p>
+            </Jumbotron>
+
+
+            <Tabs defaultActiveKey={1} id="uncontrolled-tab-example">
+                <Tab eventKey={1} title="Plasmid Map">
+                    <PlasmidViewer plasmidInfo={plasmidInfo} {...plasmidStyle} featureData={featureData} />
+                </Tab>
+                <Tab eventKey={2} title="Baseviewer">
+                    <Alert bsStyle="warning">Oh no! This isn't implemented yet!"</Alert>
+                </Tab>
+                <Tab eventKey={3} title="Assembly">
+                    <Alert bsStyle="warning">Oh no! This isn't implemented yet!"</Alert>
+                </Tab>
+            </Tabs>
+            </div>;
     }
 }
 

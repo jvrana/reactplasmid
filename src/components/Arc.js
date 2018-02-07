@@ -41,7 +41,7 @@ function ArcPath(props) {
 }
 
 function Arc(props) {
-    return <path className={"arc"} d={props.path} fill={props.fill} stroke={'black'}
+    return <path className={"arc"} d={props.path} fill={props.fill} stroke={props.stroke}
                  strokeWidth={props.strokeWidth} opacity={props.opacity}/>
 }
 
