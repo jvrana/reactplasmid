@@ -1,18 +1,19 @@
 {
   "name": "reactplasmid",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "dependencies": {
-    "bootstrap": "3",
+    "bootstrap": "^4.1.0",
     "cursor": "file:/Users/justinvrana/Documents/Github/react-cursor-position/",
-    "d3": "4.13.0",
+    "d3": "^5.1.0",
+    "fsevents": "^1.2.2",
     "lodash": "^4.17.5",
     "prop-types": "^15.6.0",
     "randomcolor": "^0.5.3",
     "react": "^16.2.0",
     "react-bootstrap": "^0.32.1",
     "react-dom": "^16.2.0",
-    "react-scripts": "1.1.0"
+    "react-scripts": "^1.1.4"
   },
   "scripts": {
     "start": "react-scripts start",

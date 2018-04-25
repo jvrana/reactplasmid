@@ -35,7 +35,7 @@ function PlasmidPath(props) {
         {/*{ `circle.spine { fill:none }` }*/}
         {/*</style>*/}
         <g transform={"translate(" + x + "," + y + ")"}>
-            {children}
+            {/*{children}*/}
             <circle
                 className="spine"
                 cx={0}
