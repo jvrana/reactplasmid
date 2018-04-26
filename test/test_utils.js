@@ -1,4 +1,4 @@
-import {cartesian2polar, polar2cartesian, position2cartesian, cartesian2position, position2theta, theta2position} from './../src/components/Utils';
+import { cartesian2polar, polar2cartesian, position2cartesian, cartesian2position, position2theta, theta2position } from './../src/components/Utils';
 var chai = require('chai');
 var assert = chai.assert;
 
